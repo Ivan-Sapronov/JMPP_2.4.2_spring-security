@@ -1,24 +1,37 @@
 package ru.sapronov.springsecurity.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.sapronov.springsecurity.config.handler.LoginSuccessHandler;
+import ru.sapronov.springsecurity.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("ADMIN").password("ADMIN").roles("ADMIN");
+    private UserDetailsService userService;
+
+    @Autowired
+    public void setUserService(UserDetailsService userService) {
+        this.userService = userService;
     }
+
+    //Реализация из шаблона
+//    @Override
+//    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.inMemoryAuthentication().withUser("ADMIN").password("ADMIN").roles("ADMIN");
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -51,11 +64,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").anonymous()
                 // защищенные URL
-                .antMatchers("/hello").access("hasAnyRole('ADMIN')").anyRequest().authenticated();
+                .antMatchers("/hello").access("hasAnyRole('ADMIN', 'USER')").anyRequest().authenticated();
+
     }
 
+    //Реализация из шаблона
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return NoOpPasswordEncoder.getInstance();
+//    }
+
+    //Третий вариант - у нас есть свои собственные сущности и мы хотим,
+    //чтобы эти данные использовались для аутентификации.
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+    public DaoAuthenticationProvider daoAuthenticationProvider(){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder()); //включаем енкодер
+        daoAuthenticationProvider.setUserDetailsService(userService);
+        return  daoAuthenticationProvider;
+    }
+
+    //Т.к. в БД у нас будут храниться пароли в bcrypt
+    //а вводить пароль на странице мы хотим уже в понятном виде
+    //создаём бин для преобразования паролей
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
