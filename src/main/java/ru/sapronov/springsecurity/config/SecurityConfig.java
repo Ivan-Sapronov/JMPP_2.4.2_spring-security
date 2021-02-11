@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userService = userService;
     }
 
-    //Реализация из шаблона
+//Реализация из шаблона
 //    @Override
 //    public void configure(AuthenticationManagerBuilder auth) throws Exception {
 //        auth.inMemoryAuthentication().withUser("ADMIN").password("ADMIN").roles("ADMIN");
@@ -74,8 +74,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        return NoOpPasswordEncoder.getInstance();
 //    }
 
-    //Третий вариант - у нас есть свои собственные сущности и мы хотим,
-    //чтобы эти данные использовались для аутентификации.
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -84,9 +82,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return  daoAuthenticationProvider;
     }
 
-    //Т.к. в БД у нас будут храниться пароли в bcrypt
-    //а вводить пароль на странице мы хотим уже в понятном виде
-    //создаём бин для преобразования паролей
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
