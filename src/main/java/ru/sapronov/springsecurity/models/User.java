@@ -19,6 +19,7 @@ public class User implements UserDetails {
     private Long id;
     @Column(unique = true)
     private String username;
+    @Column
     private String password;
 
     //Поля, представляющие бизнес-лоику модели

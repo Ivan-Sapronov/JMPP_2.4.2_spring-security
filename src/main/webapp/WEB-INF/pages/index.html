@@ -24,7 +24,7 @@
             <p th:each="role : ${user.roles}" th:text="${role}"></p>
         </td>
         <td>
-            <a th:href="@{/admin/update(id=${user.id})}">
+            <a th:href="@{/admin/edit(id=${user.id})}">
                 <input type="submit" value="Edit">
             </a>
         </td>

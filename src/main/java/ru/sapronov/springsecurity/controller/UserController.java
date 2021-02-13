@@ -4,14 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import ru.sapronov.springsecurity.models.Role;
 import ru.sapronov.springsecurity.models.User;
+import ru.sapronov.springsecurity.service.RoleService;
 import ru.sapronov.springsecurity.service.UserService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/")
@@ -20,8 +22,8 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-//	@Autowired
-//	private RoleService roleService;
+    @Autowired
+    private RoleService roleService;
 
 	@RequestMapping(value = "hello", method = RequestMethod.GET)
 	public String printWelcome(ModelMap model) {
@@ -50,6 +52,39 @@ public class UserController {
 		List<User> users = userService.index();
 		model.addAttribute("users", users);
 		return "index";
+	}
+
+	//@RequestMapping(value = "/admin/edit", method = RequestMethod.GET)
+	@GetMapping("/admin/edit")
+	public String editUser(@RequestParam(name = "id", defaultValue = "0") long id,
+							 ModelMap model) {
+
+		model.addAttribute("user", userService.show(id));
+		return "edit";
+	}
+
+	//@RequestMapping(value = "/admin/edit", method = RequestMethod.POST)
+	@PostMapping("/admin/edit")
+	public String updatedUser(@ModelAttribute("user") User user,
+							  @RequestParam(value = "adminRole", defaultValue = "") String adminRole,
+							  @RequestParam(value = "userRole", defaultValue = "") String userRole) {
+
+		Set<Role> roles = userService.show(user.getId()).getRoles();
+		user.setRoles(getRoles(adminRole, userRole));
+		userService.update(user.getId(), user);
+		//roles.forEach(x -> roleService.deleteRole(x.getId()));
+		return "redirect:/admin/index";
+	}
+
+	public Set<Role> getRoles(String adminRole, String userRole) {
+		Set<Role> roles = new HashSet<>();
+		if (!adminRole.isEmpty()) {
+			roles.add(new Role(adminRole));
+		}
+		if (!userRole.isEmpty()) {
+			roles.add(new Role(userRole));
+		}
+		return roles;
 	}
 
 }
