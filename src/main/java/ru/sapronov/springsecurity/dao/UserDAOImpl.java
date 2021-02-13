@@ -49,6 +49,7 @@ public class UserDAOImpl implements UserDAO {
         userInDB.setAge(user.getAge());
         userInDB.setEmail(user.getEmail());
         userInDB.setRoles(user.getRoles());
+        userInDB.setPassword(user.getPassword());
     }
 
     @Override

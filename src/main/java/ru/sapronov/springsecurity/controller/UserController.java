@@ -3,6 +3,7 @@ package ru.sapronov.springsecurity.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import ru.sapronov.springsecurity.models.Role;
@@ -54,7 +55,6 @@ public class UserController {
 		return "index";
 	}
 
-	//@RequestMapping(value = "/admin/edit", method = RequestMethod.GET)
 	@GetMapping("/admin/edit")
 	public String editUser(@RequestParam(name = "id", defaultValue = "0") long id,
 							 ModelMap model) {
@@ -63,16 +63,20 @@ public class UserController {
 		return "edit";
 	}
 
-	//@RequestMapping(value = "/admin/edit", method = RequestMethod.POST)
 	@PostMapping("/admin/edit")
 	public String updatedUser(@ModelAttribute("user") User user,
 							  @RequestParam(value = "adminRole", defaultValue = "") String adminRole,
 							  @RequestParam(value = "userRole", defaultValue = "") String userRole) {
 
-		Set<Role> roles = userService.show(user.getId()).getRoles();
 		user.setRoles(getRoles(adminRole, userRole));
 		userService.update(user.getId(), user);
-		//roles.forEach(x -> roleService.deleteRole(x.getId()));
+		return "redirect:/admin/index";
+	}
+
+	@RequestMapping(value = "/admin/delete", method = RequestMethod.GET)
+	@GetMapping("/admin/delete")
+	public String deleteUser(@RequestParam(name = "id", defaultValue = "0") long id) {
+		userService.delete(id);
 		return "redirect:/admin/index";
 	}
 
@@ -86,5 +90,4 @@ public class UserController {
 		}
 		return roles;
 	}
-
 }

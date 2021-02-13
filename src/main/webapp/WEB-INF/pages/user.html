@@ -2,9 +2,11 @@
 <html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>User profile</title>
+    <title>Your profile</title>
 </head>
 <body>
+<h3>Your profile:</h3>
+<br/>
 <p th:text="${'Id: ' + user.getId()}">userId</p>
 <p th:text="${'Login: ' + user.getUsername()}">userId</p>
 <p th:text="${'Firstname: ' + user.getFirstname()}">userName</p>
@@ -14,14 +16,6 @@
 <br/>
 <hr/>
 <br/>
-
-<form style="display:inline;" th:method="GET" th:action="@{/users/{id}/edit(id=${user.getId()})}">
-    <input type="submit" value="Edit my profile"/>
-</form>
-
-<form style="display:inline;" th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">
-    <input type="submit" value="Delete my profile"/>
-</form>
 
 <p>
     <a th:href="@{/logout}">

@@ -3,27 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Update user</title>
+    <style>
+        body {
+            background: #333; /* Цвет фона */
+            color: #fc0; /* Цвет текста */
+        }
+    </style>
 </head>
 <body>
 <h1>Edit user profile</h1>
-<form method="post">
+<form method="post" th:object="${user}">
     <table border="1" cellpadding="15">
         <tr>
             <th>Id</th>
-            <th>New login</th>
-            <th>New firstname</th>
-            <th>New surname</th>
-            <th>New email</th>
-            <th>New password</th>
-            <th>New role</th>
+            <th>Login</th>
+            <th>Firstname</th>
+            <th>Surname</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Password (bcrypt)</th>
+            <th>Roles</th>
         </tr>
         <tr th:align="center">
             <td th:text="${user.id}"></td>
-            <td><input required type="text" name="username"></td>
-            <td><input required type="text" name="firstname"></td>
-            <td><input required type="text" name="surname"></td>
-            <td><input required type="text" name="email"></td>
-            <td><input required type="password" name="password"></td>
+            <td><input required type="text" th:field="*{username}"></td>
+            <td><input required type="text" th:field="*{firstname}"></td>
+            <td><input required type="text" th:field="*{surname}"></td>
+            <td><input required type="text" th:field="*{age}"></td>
+            <td><input required type="email" th:field="*{email}"></td>
+            <td><input required type="password" th:field="*{password}"></td>
             <td>
                 <input type="checkbox" name="adminRole" value="ROLE_ADMIN"> Admin
                 <input type="checkbox" name="userRole" value="ROLE_USER"> User
