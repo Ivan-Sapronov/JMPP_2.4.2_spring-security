@@ -11,11 +11,13 @@ import ru.sapronov.springsecurity.models.User;
 import ru.sapronov.springsecurity.service.RoleService;
 import ru.sapronov.springsecurity.service.UserService;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author Ivan Sapronov
+ */
 @Controller
 @RequestMapping("/")
 public class UserController {
@@ -25,16 +27,6 @@ public class UserController {
 
     @Autowired
     private RoleService roleService;
-
-	@RequestMapping(value = "hello", method = RequestMethod.GET)
-	public String printWelcome(ModelMap model) {
-		List<String> messages = new ArrayList<>();
-		messages.add("Hello!");
-		messages.add("I'm Spring MVC-SECURITY application");
-		messages.add("5.2.0 version by sep'19 ");
-		model.addAttribute("messages", messages);
-		return "hello";
-	}
 
 	@GetMapping("login")
     public String loginPage() {
@@ -55,10 +47,31 @@ public class UserController {
 		return "index";
 	}
 
+	@GetMapping( "/admin/create")
+	public String createUser(ModelMap model) {
+		model.addAttribute("user", new User());
+		return "create";
+	}
+
+	@PostMapping( "/admin/create")
+	public String createdUser(@ModelAttribute("newUser") User user,
+							  @RequestParam(value = "adminRole", defaultValue = "") String adminRole,
+							  @RequestParam(value = "userRole", defaultValue = "") String userRole) {
+
+//этот вариант бросает (при этом сохраняя всё правильно в БД)
+//javax.persistence.PersistenceException: org.hibernate.PersistentObjectException: detached entity passed to persist: ru.sapronov.springsecurity.models.Role
+//		user.setRoles(getRoles(adminRole, userRole));
+//		userService.save(user);
+
+		userService.save(user);
+		user.setRoles(getRoles(adminRole, userRole));
+		userService.update(user);
+		return "redirect:/admin/index";
+	}
+
 	@GetMapping("/admin/edit")
 	public String editUser(@RequestParam(name = "id", defaultValue = "0") long id,
 							 ModelMap model) {
-
 		model.addAttribute("user", userService.show(id));
 		return "edit";
 	}
@@ -69,11 +82,10 @@ public class UserController {
 							  @RequestParam(value = "userRole", defaultValue = "") String userRole) {
 
 		user.setRoles(getRoles(adminRole, userRole));
-		userService.update(user.getId(), user);
+		userService.update(user);
 		return "redirect:/admin/index";
 	}
 
-	@RequestMapping(value = "/admin/delete", method = RequestMethod.GET)
 	@GetMapping("/admin/delete")
 	public String deleteUser(@RequestParam(name = "id", defaultValue = "0") long id) {
 		userService.delete(id);
@@ -83,10 +95,10 @@ public class UserController {
 	public Set<Role> getRoles(String adminRole, String userRole) {
 		Set<Role> roles = new HashSet<>();
 		if (!adminRole.isEmpty()) {
-			roles.add(new Role(adminRole));
+			roles.add(roleService.getRoleByName(adminRole));
 		}
 		if (!userRole.isEmpty()) {
-			roles.add(new Role(userRole));
+			roles.add(roleService.getRoleByName(userRole));
 		}
 		return roles;
 	}

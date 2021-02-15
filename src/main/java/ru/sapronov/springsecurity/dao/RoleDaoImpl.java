@@ -23,6 +23,12 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
+    public Role getRoleByName(String role) {
+        return entityManager.createQuery("select r from Role r where role = :role", Role.class)
+                .setParameter("role", role).getResultList().get(0);
+    }
+
+    @Override
     public void deleteRole(long id) {
         entityManager.remove(getRoleById(id));
     }

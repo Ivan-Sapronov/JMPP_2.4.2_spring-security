@@ -2,6 +2,9 @@ package ru.sapronov.springsecurity.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+/**
+ * @author Ivan Sapronov
+ */
 public class AppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
     // Метод, указывающий на класс конфигурации
     @Override

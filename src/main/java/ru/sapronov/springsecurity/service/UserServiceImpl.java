@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Transactional
     @Override
-    public void update(long id, User user) {
-        userDAO.update(id, user);
+    public void update(User user) {
+        userDAO.update(user);
     }
 
     @Transactional
@@ -58,11 +58,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void delete(long id) {
         userDAO.delete(id);
     }
-
-//    @Override
-//    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-//        return userDAO.getUserByUsername(name);
-//    }
 
     @Override
     @Transactional

@@ -9,5 +9,7 @@ public interface RoleDao {
 
     Role getRoleById(long id);
 
+    Role getRoleByName(String role);
+
     void deleteRole(long id);
 }

@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
+/**
+ * @author Ivan Sapronov
+ */
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 

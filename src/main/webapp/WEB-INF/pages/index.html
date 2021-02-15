@@ -20,6 +20,8 @@
         <th>Login</th>
         <th>Firstname</th>
         <th>Surname</th>
+        <th>Age</th>
+        <th>Email</th>
         <th>Role</th>
         <th colspan="2">Action</th>
     </tr>
@@ -28,6 +30,8 @@
         <td th:text="${user.username}"></td>
         <td th:text="${user.firstname}"></td>
         <td th:text="${user.surname}"></td>
+        <td th:text="${user.age}"></td>
+        <td th:text="${user.email}"></td>
         <td>
             <p th:each="role : ${user.roles}" th:text="${role}"></p>
         </td>

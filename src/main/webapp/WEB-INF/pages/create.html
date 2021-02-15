@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Update user</title>
+    <title>Create user</title>
     <style>
         body {
             background: #333; /* Цвет фона */
@@ -11,11 +11,10 @@
     </style>
 </head>
 <body>
-<h1>Edit user profile</h1>
+<h1>Create the new user profile:</h1>
 <form method="post" th:object="${user}">
     <table border="1" cellpadding="15">
         <tr>
-            <th>Id</th>
             <th>Login</th>
             <th>Firstname</th>
             <th>Surname</th>
@@ -25,7 +24,6 @@
             <th>Roles</th>
         </tr>
         <tr th:align="center">
-            <td th:text="${user.id}"></td>
             <td><input required type="text" th:field="*{username}"></td>
             <td><input required type="text" th:field="*{firstname}"></td>
             <td><input required type="text" th:field="*{surname}"></td>
@@ -39,7 +37,7 @@
         </tr>
     </table>
     <p>
-        <input type="submit" value="Save changes!">
+        <input type="submit" value="Save user in Database!">
     </p>
 </form>
 <p>
